@@ -1,4 +1,3 @@
-
 import { Book, BookOpen, Calculator, Library, PlayCircle, Video } from "lucide-react";
 import { LearningCard } from "@/components/LearningCard";
 import { Section } from "@/components/Section";
@@ -23,18 +22,21 @@ const Index = () => {
             subtitle="Master equations and expressions"
             icon={<Calculator className="w-6 h-6 text-spotify-accent" />}
             href="/practice/algebra"
+            imageSrc="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=500"
           />
           <LearningCard
             title="Geometry Practice"
             subtitle="Explore shapes and spaces"
             icon={<Book className="w-6 h-6 text-spotify-accent" />}
             href="/practice/geometry"
+            imageSrc="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=500"
           />
           <LearningCard
             title="Advanced Math"
             subtitle="Challenge yourself"
             icon={<Library className="w-6 h-6 text-spotify-accent" />}
             href="/practice/advanced"
+            imageSrc="https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?auto=format&fit=crop&w=500"
           />
         </Section>
 
@@ -44,6 +46,7 @@ const Index = () => {
             subtitle="Comprehensive guide to functions"
             icon={<Video className="w-6 h-6 text-spotify-accent" />}
             href="/videos/functions"
+            imageSrc="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&w=500"
           />
           <LearningCard
             title="Trigonometry Basics"
@@ -65,6 +68,7 @@ const Index = () => {
             subtitle="Test your algebraic skills"
             icon={<Calculator className="w-6 h-6 text-spotify-accent" />}
             href="/questions/algebra"
+            imageSrc="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=500"
           />
           <LearningCard
             title="Geometry Puzzle"
@@ -86,6 +90,7 @@ const Index = () => {
             subtitle="Master chance and statistics"
             icon={<Calculator className="w-6 h-6 text-spotify-accent" />}
             href="/topics/probability"
+            imageSrc="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=500"
           />
           <LearningCard
             title="Coordinate Geometry"

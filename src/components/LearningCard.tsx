@@ -8,9 +8,10 @@ interface LearningCardProps {
   icon: React.ReactNode;
   href: string;
   className?: string;
+  imageSrc?: string;
 }
 
-export const LearningCard = ({ title, subtitle, icon, href, className }: LearningCardProps) => {
+export const LearningCard = ({ title, subtitle, icon, href, className, imageSrc }: LearningCardProps) => {
   return (
     <motion.a
       href={href}
@@ -24,12 +25,17 @@ export const LearningCard = ({ title, subtitle, icon, href, className }: Learnin
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex items-center justify-between">
+      {imageSrc && (
+        <div className="absolute inset-0 opacity-20">
+          <img src={imageSrc} alt="" className="w-full h-full object-cover" />
+        </div>
+      )}
+      <div className="flex items-center justify-between relative z-10">
         <div className="rounded-full bg-spotify-dark p-3">
           {icon}
         </div>
       </div>
-      <div className="mt-auto">
+      <div className="mt-auto relative z-10">
         <h3 className="text-lg font-semibold text-white mb-1">{title}</h3>
         <p className="text-sm text-spotify-text">{subtitle}</p>
       </div>
