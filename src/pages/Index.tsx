@@ -1,109 +1,153 @@
-import { Book, BookOpen, Calculator, Library, PlayCircle, Video } from "lucide-react";
+
+import { Book, BookOpen, Calculator, Library, PlayCircle, Video, ChevronRight } from "lucide-react";
 import { LearningCard } from "@/components/LearningCard";
 import { Section } from "@/components/Section";
 import { motion } from "framer-motion";
+import { Progress } from "@/components/ui/progress";
+
+interface CourseProgressProps {
+  title: string;
+  subtitle: string;
+  progress: number;
+  imageSrc: string;
+}
+
+const CourseProgress = ({ title, subtitle, progress, imageSrc }: CourseProgressProps) => {
+  return (
+    <motion.div
+      className="flex items-center gap-4 p-4 rounded-lg bg-spotify-card hover:bg-spotify-hover transition-colors"
+      whileHover={{ scale: 1.02 }}
+    >
+      <img src={imageSrc} alt="" className="w-12 h-12 rounded-lg object-cover" />
+      <div className="flex-1">
+        <h3 className="text-white font-medium">{title}</h3>
+        <p className="text-sm text-spotify-text">{subtitle}</p>
+        <Progress value={progress} className="mt-2" />
+      </div>
+      <span className="text-sm text-spotify-text">{progress}% complete</span>
+    </motion.div>
+  );
+};
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-spotify-dark text-white">
       <div className="container py-8">
-        <motion.h1 
-          className="text-4xl font-bold mb-8"
+        <motion.div 
+          className="flex items-center justify-between mb-8"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          Welcome back to your learning journey
-        </motion.h1>
+          <div>
+            <h1 className="text-4xl font-bold">Welcome back to your learning journey</h1>
+            <p className="text-spotify-text mt-2">Resume your topics</p>
+          </div>
+        </motion.div>
 
-        <Section title="Practice Mix">
-          <LearningCard
-            title="Algebra Practice"
-            subtitle="Master equations and expressions"
-            icon={<Calculator className="w-6 h-6 text-spotify-accent" />}
-            href="/practice/algebra"
+        <div className="grid gap-4 mb-8">
+          <CourseProgress
+            title="Understanding laws of Physics"
+            subtitle="Thermodynamics • Motion • Vector"
+            progress={90}
             imageSrc="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=500"
           />
-          <LearningCard
-            title="Geometry Practice"
-            subtitle="Explore shapes and spaces"
-            icon={<Book className="w-6 h-6 text-spotify-accent" />}
-            href="/practice/geometry"
+          <CourseProgress
+            title="Body and mind"
+            subtitle="Physical systems • digestion • Exercise"
+            progress={85}
             imageSrc="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=500"
           />
-          <LearningCard
-            title="Advanced Math"
-            subtitle="Challenge yourself"
-            icon={<Library className="w-6 h-6 text-spotify-accent" />}
-            href="/practice/advanced"
+          <CourseProgress
+            title="Understanding universe"
+            subtitle="Space • Relativity • Dark matter"
+            progress={65}
             imageSrc="https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?auto=format&fit=crop&w=500"
           />
-        </Section>
+        </div>
 
-        <Section title="Video Recommendations">
+        <Section title="Mixes for you" className="mb-8">
           <LearningCard
-            title="Understanding Functions"
-            subtitle="Comprehensive guide to functions"
-            icon={<Video className="w-6 h-6 text-spotify-accent" />}
-            href="/videos/functions"
-            imageSrc="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&w=500"
-          />
-          <LearningCard
-            title="Trigonometry Basics"
-            subtitle="Essential concepts explained"
-            icon={<PlayCircle className="w-6 h-6 text-spotify-accent" />}
-            href="/videos/trigonometry"
-          />
-          <LearningCard
-            title="Calculus Introduction"
-            subtitle="Start your calculus journey"
-            icon={<Video className="w-6 h-6 text-spotify-accent" />}
-            href="/videos/calculus"
-          />
-        </Section>
-
-        <Section title="Question of the Day">
-          <LearningCard
-            title="Algebra Challenge"
-            subtitle="Test your algebraic skills"
+            title="Statistics Mix"
+            subtitle="Median • Standard Deviation • Average"
             icon={<Calculator className="w-6 h-6 text-spotify-accent" />}
-            href="/questions/algebra"
-            imageSrc="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&w=500"
+            href="/practice/statistics"
+            imageSrc="https://images.unsplash.com/photo-1460574283810-2aab119d8511?auto=format&fit=crop&w=500"
           />
           <LearningCard
-            title="Geometry Puzzle"
-            subtitle="Solve spatial problems"
+            title="Linear relationship Word problems mix"
+            subtitle="Linear equations • Word Problems • Slopes"
             icon={<Book className="w-6 h-6 text-spotify-accent" />}
-            href="/questions/geometry"
+            href="/practice/linear"
+            imageSrc="https://images.unsplash.com/photo-1486718448742-163732cd1544?auto=format&fit=crop&w=500"
           />
           <LearningCard
-            title="Advanced Problem"
-            subtitle="Push your limits"
+            title="Quadratic functions mix"
+            subtitle="Quadratic equations • Graphs • Vertex"
             icon={<Library className="w-6 h-6 text-spotify-accent" />}
-            href="/questions/advanced"
+            href="/practice/quadratic"
+            imageSrc="https://images.unsplash.com/photo-1439337153520-7082a56a81f4?auto=format&fit=crop&w=500"
           />
         </Section>
 
-        <Section title="Topics to Practice">
+        <Section title="Video mix for you">
           <LearningCard
-            title="Probability"
-            subtitle="Master chance and statistics"
-            icon={<Calculator className="w-6 h-6 text-spotify-accent" />}
-            href="/topics/probability"
-            imageSrc="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=500"
+            title="The realm of mathematics"
+            subtitle="Comprehensive guide to math concepts"
+            icon={<Video className="w-6 h-6 text-spotify-accent" />}
+            href="/videos/math-realm"
+            imageSrc="https://images.unsplash.com/photo-1497604401993-f2e922e5cb0a?auto=format&fit=crop&w=500"
           />
           <LearningCard
-            title="Coordinate Geometry"
-            subtitle="Navigate the coordinate plane"
+            title="Diving deep into the world of probability"
+            subtitle="Probability concepts explained"
+            icon={<PlayCircle className="w-6 h-6 text-spotify-accent" />}
+            href="/videos/probability"
+            imageSrc="https://images.unsplash.com/photo-1551038247-3d9af20df552?auto=format&fit=crop&w=500"
+          />
+          <LearningCard
+            title="Chemistry: Alkaline and Acidic solution study"
+            subtitle="Understanding pH and solutions"
+            icon={<Video className="w-6 h-6 text-spotify-accent" />}
+            href="/videos/chemistry"
+            imageSrc="https://images.unsplash.com/photo-1493397212122-2b85dda8106b?auto=format&fit=crop&w=500"
+          />
+        </Section>
+
+        <Section title="In-depth topics">
+          <LearningCard
+            title="Differential calculus"
+            subtitle="Advanced • Comprehensive guide"
             icon={<BookOpen className="w-6 h-6 text-spotify-accent" />}
-            href="/topics/coordinate-geometry"
-          />
+            href="/topics/calculus"
+            className="relative"
+          >
+            <span className="absolute bottom-4 right-4 text-xs font-medium bg-spotify-accent px-2 py-1 rounded">
+              advance
+            </span>
+          </LearningCard>
           <LearningCard
-            title="Linear Equations"
-            subtitle="Word problems and applications"
+            title="Quantum Mechanics of higher order"
+            subtitle="Intermediate • Complex concepts"
             icon={<Book className="w-6 h-6 text-spotify-accent" />}
-            href="/topics/linear-equations"
-          />
+            href="/topics/quantum"
+            className="relative"
+          >
+            <span className="absolute bottom-4 right-4 text-xs font-medium bg-yellow-500 px-2 py-1 rounded">
+              intermediate
+            </span>
+          </LearningCard>
+          <LearningCard
+            title="Simultaneous & quadratic equations"
+            subtitle="Advanced • Problem solving"
+            icon={<Calculator className="w-6 h-6 text-spotify-accent" />}
+            href="/topics/equations"
+            className="relative"
+          >
+            <span className="absolute bottom-4 right-4 text-xs font-medium bg-spotify-accent px-2 py-1 rounded">
+              advance
+            </span>
+          </LearningCard>
         </Section>
       </div>
     </div>

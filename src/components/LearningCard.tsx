@@ -9,9 +9,10 @@ interface LearningCardProps {
   href: string;
   className?: string;
   imageSrc?: string;
+  children?: React.ReactNode;
 }
 
-export const LearningCard = ({ title, subtitle, icon, href, className, imageSrc }: LearningCardProps) => {
+export const LearningCard = ({ title, subtitle, icon, href, className, imageSrc, children }: LearningCardProps) => {
   return (
     <motion.a
       href={href}
@@ -38,6 +39,7 @@ export const LearningCard = ({ title, subtitle, icon, href, className, imageSrc 
       <div className="mt-auto relative z-10">
         <h3 className="text-lg font-semibold text-white mb-1">{title}</h3>
         <p className="text-sm text-spotify-text">{subtitle}</p>
+        {children}
       </div>
     </motion.a>
   );
