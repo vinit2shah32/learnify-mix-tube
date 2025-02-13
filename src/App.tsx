@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import Index from "./pages/Index";
+import Question from "./pages/Question";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
               <SidebarTrigger />
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/question/:id" element={<Question />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
