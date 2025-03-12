@@ -88,7 +88,10 @@ export const SolutionGuide = ({
 
       <div className="flex justify-between mt-6">
         <Button
-          onClick={() => setCurrentMicroQuestion(prev => Math.max(0, prev - 1))}
+          onClick={() => {
+            const newIndex = Math.max(0, currentMicroQuestion - 1);
+            setCurrentMicroQuestion(newIndex);
+          }}
           disabled={currentMicroQuestion === 0}
           variant="outline"
           className="border-[#9747FF] text-[#9747FF]"
@@ -96,7 +99,10 @@ export const SolutionGuide = ({
           Previous Step
         </Button>
         <Button
-          onClick={() => setCurrentMicroQuestion(prev => Math.min(microQuestions.length - 1, prev + 1))}
+          onClick={() => {
+            const newIndex = Math.min(microQuestions.length - 1, currentMicroQuestion + 1);
+            setCurrentMicroQuestion(newIndex);
+          }}
           disabled={currentMicroQuestion === microQuestions.length - 1}
           className="bg-[#9747FF] hover:bg-[#8035E8]"
         >
