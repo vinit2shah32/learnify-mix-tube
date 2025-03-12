@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { QuestionInterface } from '@/components/QuestionInterface';
+import { QuestionInterface } from '@/components/question';
 
 // Mock data - replace with actual data from your backend
 const mockQuestions = {
