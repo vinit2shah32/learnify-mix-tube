@@ -12,9 +12,25 @@ interface LearningCardProps {
   imageSrc?: string;
   children?: React.ReactNode;
   isVideo?: boolean;
+  questionId?: number;
 }
 
-export const LearningCard = ({ title, subtitle, icon, href, className, imageSrc, children, isVideo }: LearningCardProps) => {
+export const LearningCard = ({ 
+  title, 
+  subtitle, 
+  icon, 
+  href, 
+  className, 
+  imageSrc, 
+  children, 
+  isVideo,
+  questionId 
+}: LearningCardProps) => {
+  // Determine if this is a question card and should link to the Question interface
+  const isQuestion = questionId !== undefined;
+  const finalHref = isQuestion ? `/question/${questionId}` : href;
+  
+  // Determine which component to use for the link
   const Component = isVideo ? 'a' : Link;
   
   return (
@@ -29,7 +45,7 @@ export const LearningCard = ({ title, subtitle, icon, href, className, imageSrc,
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Component to={isVideo ? undefined : href} href={isVideo ? href : undefined} className="flex-1 flex flex-col">
+      <Component to={isVideo ? undefined : finalHref} href={isVideo ? href : undefined} className="flex-1 flex flex-col">
         {imageSrc && (
           <div className="absolute inset-0 opacity-20">
             <img src={imageSrc} alt="" className="w-full h-full object-cover" />
