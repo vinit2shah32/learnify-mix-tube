@@ -5,6 +5,14 @@ export interface MicroQuestion {
   answer: string;
   solution: string;
   topic: string;
+  choices?: string[]; // Added choices for micro questions
+  attempted?: boolean; // Track if attempted
+}
+
+export interface SolutionMethod {
+  name: string;
+  description: string;
+  microQuestions: MicroQuestion[];
 }
 
 export interface Question {
@@ -14,6 +22,7 @@ export interface Question {
   choices?: string[];
   correctAnswer: string | string[];
   microQuestions: MicroQuestion[];
+  alternativeMethods?: SolutionMethod[]; // Add alternative methods
 }
 
 export interface QuestionInterfaceProps {

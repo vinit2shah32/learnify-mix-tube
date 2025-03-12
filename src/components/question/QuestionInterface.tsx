@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -17,7 +16,6 @@ export const QuestionInterface = ({ question }: QuestionInterfaceProps) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   
-  // Function to check if the answer is correct
   const checkAnswer = () => {
     let correct = false;
     
@@ -176,6 +174,7 @@ export const QuestionInterface = ({ question }: QuestionInterfaceProps) => {
         >
           <SolutionGuide
             microQuestions={question.microQuestions}
+            alternativeMethods={question.alternativeMethods}
             currentMicroQuestion={currentMicroQuestion}
             setCurrentMicroQuestion={setCurrentMicroQuestion}
           />
