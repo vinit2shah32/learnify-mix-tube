@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -31,6 +31,9 @@ export const SolutionGuide = ({
   const [attemptedQuestions, setAttemptedQuestions] = useState<{[key: number]: boolean}>({});
   const [activeMethod, setActiveMethod] = useState<string>("standard");
   
+  // Refs for accordion items to enable scrolling
+  const accordionRefs = useRef<{[key: string]: HTMLElement | null}>({});
+  
   // Get the current set of micro questions based on active method
   const getCurrentMicroQuestions = () => {
     if (activeMethod === "standard") {
@@ -53,27 +56,55 @@ export const SolutionGuide = ({
   
   // Mark question as attempted when user submits or views solution
   const markQuestionAttempted = (questionId: number) => {
-    setAttemptedQuestions({...attemptedQuestions, [questionId]: true});
+    setAttemptedQuestions(prev => ({...prev, [questionId]: true}));
+    
+    // If this is the current question, automatically move to the next question after a short delay
+    if (questionId === currentQuestions[currentMicroQuestion]?.id) {
+      const nextIndex = currentMicroQuestion + 1;
+      if (nextIndex < currentQuestions.length) {
+        setTimeout(() => {
+          setCurrentMicroQuestion(nextIndex);
+          // Scroll to the next question
+          scrollToQuestion(nextIndex);
+        }, 500);
+      }
+    }
+  };
+  
+  // Scroll to the specified question
+  const scrollToQuestion = (index: number) => {
+    const prefix = activeMethod === "standard" ? "item-" : "alt-";
+    const ref = accordionRefs.current[`${prefix}${index}`];
+    if (ref) {
+      ref.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
   
   // Check if next question should be available
   const canAccessQuestion = (index: number) => {
     if (index === 0) return true;
     
-    // Ensure previous questions have been attempted
-    for (let i = 0; i < index; i++) {
-      const questionId = currentQuestions[i].id;
-      if (!attemptedQuestions[questionId]) {
-        return false;
-      }
+    // Ensure previous question has been attempted
+    if (index > 0 && index <= currentMicroQuestion) return true;
+    
+    // For the next question, check if current question is attempted
+    if (index === currentMicroQuestion + 1) {
+      const currentQuestionId = currentQuestions[currentMicroQuestion]?.id;
+      return attemptedQuestions[currentQuestionId] || false;
     }
-    return true;
+    
+    return false;
   };
   
   // Toggle solution visibility
   const toggleSolution = (questionId: number) => {
     markQuestionAttempted(questionId);
     setShowSolutions({...showSolutions, [questionId]: !showSolutions[questionId]});
+  };
+
+  // Continue to next question
+  const handleContinue = (questionId: number) => {
+    markQuestionAttempted(questionId);
   };
   
   return (
@@ -125,6 +156,7 @@ export const SolutionGuide = ({
                     !canAccessQuestion(index) ? "opacity-50" : "",
                     currentMicroQuestion === index ? "border-[#9747FF]" : "border-gray-300"
                   )}
+                  ref={el => accordionRefs.current[`item-${index}`] = el}
                 >
                   <AccordionTrigger className="text-left hover:no-underline">
                     <div className="flex items-center">
@@ -146,7 +178,7 @@ export const SolutionGuide = ({
                         </a>
                       </div>
                       
-                      {/* Answer choices with radio buttons */}
+                      {/* Answer choices with radio buttons - updated styling */}
                       {microQuestion.choices && microQuestion.choices.length > 0 && (
                         <div className="mt-4 space-y-3">
                           <h4 className="text-white font-medium">Select your answer:</h4>
@@ -160,7 +192,7 @@ export const SolutionGuide = ({
                                 <RadioGroupItem
                                   value={choice}
                                   id={`choice-${microQuestion.id}-${choiceIndex}`}
-                                  className="mt-1"
+                                  className="mt-1 bg-white"
                                 />
                                 <Label
                                   htmlFor={`choice-${microQuestion.id}-${choiceIndex}`}
@@ -190,7 +222,7 @@ export const SolutionGuide = ({
                               {microAnswers[microQuestion.id] && !attemptedQuestions[microQuestion.id] && (
                                 <Button 
                                   variant="ghost" 
-                                  onClick={() => markQuestionAttempted(microQuestion.id)}
+                                  onClick={() => handleContinue(microQuestion.id)}
                                   className="mt-2 text-[#9747FF]"
                                 >
                                   Continue
@@ -227,6 +259,7 @@ export const SolutionGuide = ({
               onClick={() => {
                 const newIndex = Math.max(0, currentMicroQuestion - 1);
                 setCurrentMicroQuestion(newIndex);
+                scrollToQuestion(newIndex);
               }}
               disabled={currentMicroQuestion === 0}
               variant="outline"
@@ -239,6 +272,7 @@ export const SolutionGuide = ({
                 const newIndex = Math.min(currentQuestions.length - 1, currentMicroQuestion + 1);
                 if (canAccessQuestion(newIndex)) {
                   setCurrentMicroQuestion(newIndex);
+                  scrollToQuestion(newIndex);
                 }
               }}
               disabled={
@@ -285,6 +319,7 @@ export const SolutionGuide = ({
                       !canAccessQuestion(index) ? "opacity-50" : "",
                       currentMicroQuestion === index ? "border-[#9747FF]" : "border-gray-300"
                     )}
+                    ref={el => accordionRefs.current[`alt-${index}`] = el}
                   >
                     {/* Similar accordion content as standard method */}
                     <AccordionTrigger className="text-left hover:no-underline">
@@ -321,7 +356,7 @@ export const SolutionGuide = ({
                                   <RadioGroupItem
                                     value={choice}
                                     id={`alt-choice-${microQuestion.id}-${choiceIndex}`}
-                                    className="mt-1"
+                                    className="mt-1 bg-white"
                                   />
                                   <Label
                                     htmlFor={`alt-choice-${microQuestion.id}-${choiceIndex}`}
@@ -351,7 +386,7 @@ export const SolutionGuide = ({
                                 {microAnswers[microQuestion.id] && !attemptedQuestions[microQuestion.id] && (
                                   <Button 
                                     variant="ghost" 
-                                    onClick={() => markQuestionAttempted(microQuestion.id)}
+                                    onClick={() => handleContinue(microQuestion.id)}
                                     className="mt-2 text-[#9747FF]"
                                   >
                                     Continue
@@ -388,6 +423,7 @@ export const SolutionGuide = ({
                 onClick={() => {
                   const newIndex = Math.max(0, currentMicroQuestion - 1);
                   setCurrentMicroQuestion(newIndex);
+                  scrollToQuestion(newIndex);
                 }}
                 disabled={currentMicroQuestion === 0}
                 variant="outline"
@@ -400,6 +436,7 @@ export const SolutionGuide = ({
                   const newIndex = Math.min(method.microQuestions.length - 1, currentMicroQuestion + 1);
                   if (canAccessQuestion(newIndex)) {
                     setCurrentMicroQuestion(newIndex);
+                    scrollToQuestion(newIndex);
                   }
                 }}
                 disabled={
