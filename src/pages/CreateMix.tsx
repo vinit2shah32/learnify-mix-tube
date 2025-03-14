@@ -114,6 +114,9 @@ const CreateMix = () => {
     // Add the new mix to the global mixes data
     window.mixesData.push(newMix);
     
+    // Dispatch a custom event to notify other components that mixes have been updated
+    window.dispatchEvent(new CustomEvent('mixesUpdated'));
+    
     toast({
       title: "Mix Created!",
       description: `Your mix "${mixTitle}" has been created successfully.`,
