@@ -8,6 +8,10 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import Index from "./pages/Index";
 import Question from "./pages/Question";
+import MixPractice from "./pages/MixPractice";
+import Practice from "./pages/Practice";
+import MixPracticeReport from "./pages/MixPracticeReport";
+import CreateMix from "./pages/CreateMix";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +30,10 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/question/:id" element={<Question />} />
+                <Route path="/mix-practice/:id" element={<MixPractice />} />
+                <Route path="/practice/:id" element={<Practice />} />
+                <Route path="/mix-practice-report/:id" element={<MixPracticeReport />} />
+                <Route path="/create-mix" element={<CreateMix />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>

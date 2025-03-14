@@ -1,9 +1,10 @@
 
-import { Book, BookOpen, Calculator, Library, PlayCircle, Video, ChevronRight, Edit, Compass, Brain } from "lucide-react";
+import { Book, BookOpen, Calculator, Library, PlayCircle, Video, ChevronRight, Edit, Compass, Brain, Plus } from "lucide-react";
 import { LearningCard } from "@/components/LearningCard";
 import { Section } from "@/components/Section";
 import { motion } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
+import { useState, useEffect } from "react";
 
 interface CourseProgressProps {
   title: string;
@@ -30,6 +31,28 @@ const CourseProgress = ({ title, subtitle, progress, imageSrc }: CourseProgressP
 };
 
 const Index = () => {
+  // Mock mixes data - would normally come from API
+  const [mixes, setMixes] = useState([
+    {
+      id: 1,
+      title: "Statistics Mix",
+      topics: ["Median", "Standard Deviation", "Average"],
+      isCustom: false
+    },
+    {
+      id: 2,
+      title: "Linear relationship Word problems mix",
+      topics: ["Linear equations", "Word Problems", "Slopes"],
+      isCustom: false
+    },
+    {
+      id: 3,
+      title: "Quadratic functions mix",
+      topics: ["Quadratic equations", "Graphs", "Vertex"],
+      isCustom: false
+    }
+  ]);
+
   return (
     <div className="min-h-screen bg-spotify-dark text-white">
       <div className="container py-8">
@@ -94,26 +117,22 @@ const Index = () => {
         </Section>
 
         <Section title="Mixes for you" className="mb-8">
+          {mixes.map((mix) => (
+            <LearningCard
+              key={mix.id}
+              title={mix.title}
+              subtitle={mix.topics.join(" • ")}
+              icon={<Calculator className="w-6 h-6 text-spotify-accent" />}
+              href={`/mix-practice/${mix.id}`}
+              imageSrc="https://images.unsplash.com/photo-1460574283810-2aab119d8511?auto=format&fit=crop&w=500"
+            />
+          ))}
           <LearningCard
-            title="Statistics Mix"
-            subtitle="Median • Standard Deviation • Average"
-            icon={<Calculator className="w-6 h-6 text-spotify-accent" />}
-            href="/practice/statistics"
-            imageSrc="https://images.unsplash.com/photo-1460574283810-2aab119d8511?auto=format&fit=crop&w=500"
-          />
-          <LearningCard
-            title="Linear relationship Word problems mix"
-            subtitle="Linear equations • Word Problems • Slopes"
-            icon={<Book className="w-6 h-6 text-spotify-accent" />}
-            href="/practice/linear"
-            imageSrc="https://images.unsplash.com/photo-1486718448742-163732cd1544?auto=format&fit=crop&w=500"
-          />
-          <LearningCard
-            title="Quadratic functions mix"
-            subtitle="Quadratic equations • Graphs • Vertex"
-            icon={<Library className="w-6 h-6 text-spotify-accent" />}
-            href="/practice/quadratic"
-            imageSrc="https://images.unsplash.com/photo-1439337153520-7082a56a81f4?auto=format&fit=crop&w=500"
+            title="Create your Mix"
+            subtitle="Customize your own practice mix"
+            icon={<Plus className="w-6 h-6 text-spotify-accent" />}
+            href="/create-mix"
+            className="border-2 border-dashed border-spotify-hover bg-transparent hover:bg-spotify-card/20"
           />
         </Section>
 
