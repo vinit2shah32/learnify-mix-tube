@@ -3,9 +3,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Check, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Topic, Mix } from '@/components/question/types';
 import { toast } from '@/hooks/use-toast';
+import SubjectSelection from '@/components/mix/SubjectSelection';
+import TopicSelection from '@/components/mix/TopicSelection';
+import CreateMixButton from '@/components/mix/CreateMixButton';
 
 // Mock data - replace with actual data from your backend
 const mockSubjects = ['Mathematics', 'Verbal', 'Quantitative', 'Reasoning'];
@@ -155,85 +158,27 @@ const CreateMix = () => {
         
         <div className="grid gap-10">
           {/* Subject Selection */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            <h2 className="text-2xl font-semibold mb-4">Select a Subject</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-              {mockSubjects.map((subject) => (
-                <motion.div
-                  key={subject}
-                  whileHover={{ scale: 1.02 }}
-                  className={`p-4 rounded-lg cursor-pointer border-2 transition-colors ${
-                    selectedSubject === subject
-                      ? 'border-[#9747FF] bg-spotify-hover'
-                      : 'border-spotify-hover bg-spotify-card'
-                  }`}
-                  onClick={() => handleSubjectSelect(subject)}
-                >
-                  <span className="text-lg font-medium">{subject}</span>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+          <SubjectSelection 
+            subjects={mockSubjects}
+            selectedSubject={selectedSubject}
+            onSubjectSelect={handleSubjectSelect}
+          />
           
           {/* Topic Selection */}
           {selectedSubject && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-semibold">Select Topics (Max 3)</h2>
-                <span className="text-spotify-text">
-                  {selectedTopics.length}/3 selected
-                </span>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredTopics.map((topic) => (
-                  <motion.div
-                    key={topic.id}
-                    whileHover={{ scale: 1.02 }}
-                    className={`relative p-4 rounded-lg cursor-pointer border transition-colors ${
-                      selectedTopics.includes(topic.id)
-                        ? 'border-[#9747FF] bg-spotify-hover'
-                        : 'border-spotify-hover bg-spotify-card'
-                    }`}
-                    onClick={() => handleTopicToggle(topic.id)}
-                  >
-                    <span className="text-lg font-medium">{topic.name}</span>
-                    
-                    {selectedTopics.includes(topic.id) && (
-                      <div className="absolute top-2 right-2 bg-[#9747FF] rounded-full p-1">
-                        <Check className="w-4 h-4" />
-                      </div>
-                    )}
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+            <TopicSelection
+              topics={filteredTopics}
+              selectedTopics={selectedTopics}
+              onTopicToggle={handleTopicToggle}
+            />
           )}
           
           {/* Create Button */}
           {selectedSubject && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="flex justify-center mt-6"
-            >
-              <Button 
-                onClick={handleCreateMix}
-                disabled={selectedTopics.length === 0}
-                className="bg-[#9747FF] hover:bg-[#8035E8] px-10 py-6 text-lg font-semibold"
-              >
-                Create Your Mix
-              </Button>
-            </motion.div>
+            <CreateMixButton
+              onClick={handleCreateMix}
+              disabled={selectedTopics.length === 0}
+            />
           )}
         </div>
       </div>
