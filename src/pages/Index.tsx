@@ -1,4 +1,3 @@
-
 import { Book, BookOpen, Calculator, PlayCircle, Video, Edit, Compass, Brain, Plus } from "lucide-react";
 import { LearningCard } from "@/components/LearningCard";
 import { Section } from "@/components/Section";
@@ -63,11 +62,12 @@ const Index = () => {
   const [mixes, setMixes] = useState<Mix[]>([]);
   
   useEffect(() => {
-    // Load mixes from global store
-    setMixes(window.mixesData || []);
+    // Force refresh the mixes from global store
+    setMixes([...window.mixesData]);
     
     // Listen for changes in the global mixes data
     const handleMixesUpdate = () => {
+      console.log('Mixes updated event received');
       setMixes([...window.mixesData]);
     };
     
@@ -77,6 +77,10 @@ const Index = () => {
       window.removeEventListener('mixesUpdated', handleMixesUpdate);
     };
   }, []);
+  
+  useEffect(() => {
+    console.log('Current mixes in state:', mixes);
+  }, [mixes]);
 
   return (
     <div className="min-h-screen bg-spotify-dark text-white">

@@ -100,7 +100,9 @@ const CreateMix = () => {
     const mixTitle = topicNames.join(' & ');
     
     // Generate a new ID for the mix
-    const newId = Math.max(...window.mixesData.map(mix => mix.id)) + 1;
+    const newId = window.mixesData.length > 0 
+      ? Math.max(...window.mixesData.map(mix => mix.id)) + 1 
+      : 1;
     
     // Create the new mix
     const newMix = {
@@ -113,6 +115,9 @@ const CreateMix = () => {
     
     // Add the new mix to the global mixes data
     window.mixesData.push(newMix);
+    
+    // Log the updated mixes for debugging
+    console.log('Updated mixes after creation:', window.mixesData);
     
     // Dispatch a custom event to notify other components that mixes have been updated
     window.dispatchEvent(new CustomEvent('mixesUpdated'));

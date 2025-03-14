@@ -15,52 +15,55 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-// Mock data - replace with actual data from your backend
-const mockMixes: Mix[] = [
-  { id: 1, title: 'Statistics Mix', topics: ['Median', 'Standard Deviation', 'Average'], subject: 'Mathematics' },
-  { id: 2, title: 'Linear relationship Word problems mix', topics: ['Linear equations', 'Word Problems', 'Slopes'], subject: 'Mathematics' },
-  { id: 3, title: 'Quadratic functions mix', topics: ['Quadratic equations', 'Graphs', 'Vertex'], subject: 'Mathematics' },
-];
+// Mock data - replace with actual data from your backend - only show micro topics for questions answered incorrectly
+const mockMixes = window.mixesData || [];
 
-const mockReport = {
-  topicPerformance: [
-    {
-      topic: 'Median',
+// Mock report data based on incorrect answers
+const getMockReport = (mixId: string) => {
+  // Get the selected mix
+  const selectedMix = mockMixes.find(mix => mix.id === parseInt(mixId || '1'));
+  
+  if (!selectedMix) return null;
+  
+  // Create topic performance data for each topic in the mix
+  const topicPerformance = selectedMix.topics.map(topic => {
+    return {
+      topic,
       mainQuestions: [
-        { id: 101, question: "What is the median of the following numbers: 5, 7, 12, 9, 8?", status: 'Right' as const },
-        { id: 102, question: "If two more values 10 and 11 are added to the set {5, 7, 12, 9, 8}, what is the new median?", status: 'Wrong' as const }
+        { 
+          id: Math.floor(Math.random() * 1000), 
+          question: `${topic} question 1: What is the primary concept in ${topic}?`, 
+          status: Math.random() > 0.5 ? 'Right' : 'Wrong' as const 
+        },
+        { 
+          id: Math.floor(Math.random() * 1000), 
+          question: `${topic} question 2: How do you apply ${topic} in this scenario?`, 
+          status: Math.random() > 0.5 ? 'Right' : 'Wrong' as const 
+        }
       ],
-      qas: 75
-    },
-    {
-      topic: 'Standard Deviation',
-      mainQuestions: [
-        { id: 201, question: "What is the standard deviation of 2, 4, 6, 8, 10?", status: 'Right' as const },
-        { id: 202, question: "How does adding a constant to each value affect the standard deviation?", status: 'Unattempted' as const }
-      ],
-      qas: 50
-    },
-    {
-      topic: 'Average',
-      mainQuestions: [
-        { id: 301, question: "What is the average of 15, 25, 35, 45, 55?", status: 'Right' as const },
-        { id: 302, question: "If the average of five numbers is 27, and the average of three of them is 25, what is the average of the remaining two numbers?", status: 'Right' as const }
-      ],
-      qas: 90
+      qas: Math.floor(Math.random() * 40) + 60 // Random QAS between 60-100
     }
-  ],
-  rootCauseDetection: [
-    {
-      microTopic: 'Middle Values For Even Sets',
-      videoResources: ['https://example.com/video1', 'https://example.com/video2'],
-      readingResources: ['https://example.com/reading1', 'https://example.com/reading2']
-    },
-    {
-      microTopic: 'Standard Deviation Calculation',
-      videoResources: ['https://example.com/video3'],
-      readingResources: ['https://example.com/reading3', 'https://example.com/reading4']
+  });
+  
+  // Only include root cause items for topics that have wrong answers
+  const rootCauseDetection = [];
+  
+  for (const performance of topicPerformance) {
+    const hasWrongAnswers = performance.mainQuestions.some(q => q.status === 'Wrong');
+    
+    if (hasWrongAnswers) {
+      rootCauseDetection.push({
+        microTopic: `${performance.topic} - Core Concepts`,
+        videoResources: [`https://example.com/video/${performance.topic.toLowerCase().replace(/\s+/g, '-')}`],
+        readingResources: [`https://example.com/reading/${performance.topic.toLowerCase().replace(/\s+/g, '-')}`]
+      });
     }
-  ]
+  }
+  
+  return {
+    topicPerformance,
+    rootCauseDetection
+  };
 };
 
 const MixPracticeReport = () => {
@@ -73,11 +76,13 @@ const MixPracticeReport = () => {
   const backPath = searchParams.get('back') || '';
   const isFinalReport = round === 'final';
   
+  const mockReport = getMockReport(id || '1');
+  
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   
-  if (!selectedMix) {
+  if (!selectedMix || !mockReport) {
     return <div className="text-center py-10">Mix not found</div>;
   }
   
