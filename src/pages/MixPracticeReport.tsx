@@ -1,9 +1,19 @@
 
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Book, Video, Check, X, Clock } from 'lucide-react';
 import { TopicPerformance, RootCauseItem, Mix } from '@/components/question/types';
+import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 // Mock data - replace with actual data from your backend
 const mockMixes: Mix[] = [
@@ -55,7 +65,17 @@ const mockReport = {
 
 const MixPracticeReport = () => {
   const { id } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const selectedMix = mockMixes.find(mix => mix.id === parseInt(id || '1'));
+  
+  const round = searchParams.get('round') || 'final';
+  const backPath = searchParams.get('back') || '';
+  const isFinalReport = round === 'final';
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   
   if (!selectedMix) {
     return <div className="text-center py-10">Mix not found</div>;
@@ -74,6 +94,15 @@ const MixPracticeReport = () => {
     }
   };
   
+  const handleContinuePractice = () => {
+    const nextRound = parseInt(round) + 1;
+    navigate(`/practice/${id}?round=${nextRound}`);
+  };
+  
+  const handleBackToDashboard = () => {
+    navigate('/');
+  };
+  
   return (
     <div className="min-h-screen bg-spotify-dark text-white">
       <div className="container py-8">
@@ -88,7 +117,9 @@ const MixPracticeReport = () => {
             Back to Dashboard
           </Link>
           
-          <h1 className="text-4xl font-bold mb-2">{selectedMix.title} - Practice Report</h1>
+          <h1 className="text-4xl font-bold mb-2">
+            {selectedMix.title} - {isFinalReport ? 'Final' : `Round ${round}`} Report
+          </h1>
           <p className="text-spotify-text">Your performance analysis and recommendations</p>
         </motion.div>
         
@@ -100,24 +131,24 @@ const MixPracticeReport = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             <h2 className="text-2xl font-semibold mb-4">Topic Performance</h2>
-            <div className="bg-spotify-card rounded-lg overflow-hidden">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-spotify-hover">
-                    <th className="px-6 py-3 text-left">Exam Topics</th>
-                    <th className="px-6 py-3 text-left">Main Questions</th>
-                    <th className="px-6 py-3 text-center">Report</th>
-                    <th className="px-6 py-3 text-center">QAS</th>
-                  </tr>
-                </thead>
-                <tbody>
+            <div className="rounded-lg overflow-hidden">
+              <Table>
+                <TableHeader className="bg-spotify-hover">
+                  <TableRow>
+                    <TableHead className="text-white">Exam Topics</TableHead>
+                    <TableHead className="text-white">Main Questions</TableHead>
+                    <TableHead className="text-white text-center">Report</TableHead>
+                    <TableHead className="text-white text-center">QAS</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {mockReport.topicPerformance.map((item, topicIndex) => (
                     <React.Fragment key={topicIndex}>
                       {item.mainQuestions.map((question, qIndex) => (
-                        <tr key={`${topicIndex}-${qIndex}`} className="border-t border-spotify-hover">
+                        <TableRow key={`${topicIndex}-${qIndex}`} className="border-t border-spotify-hover">
                           {qIndex === 0 && (
-                            <td 
-                              className="px-6 py-4 align-top" 
+                            <TableCell 
+                              className="align-top" 
                               rowSpan={item.mainQuestions.length}
                             >
                               <a 
@@ -128,31 +159,31 @@ const MixPracticeReport = () => {
                               >
                                 {item.topic}
                               </a>
-                            </td>
+                            </TableCell>
                           )}
-                          <td className="px-6 py-4">{question.question}</td>
-                          <td className="px-6 py-4 text-center">
+                          <TableCell>{question.question}</TableCell>
+                          <TableCell className="text-center">
                             <div className="flex items-center justify-center">
                               {getStatusIcon(question.status)}
                               <span className="ml-2">{question.status}</span>
                             </div>
-                          </td>
+                          </TableCell>
                           {qIndex === 0 && (
-                            <td 
-                              className="px-6 py-4 text-center" 
+                            <TableCell 
+                              className="text-center" 
                               rowSpan={item.mainQuestions.length}
                             >
                               <div className="inline-block px-3 py-1 rounded-full bg-spotify-hover">
                                 {item.qas}/100
                               </div>
-                            </td>
+                            </TableCell>
                           )}
-                        </tr>
+                        </TableRow>
                       ))}
                     </React.Fragment>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
           </motion.div>
           
@@ -163,19 +194,19 @@ const MixPracticeReport = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <h2 className="text-2xl font-semibold mb-4">Root Cause Detection</h2>
-            <div className="bg-spotify-card rounded-lg overflow-hidden">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-spotify-hover">
-                    <th className="px-6 py-3 text-left">Micro Topics</th>
-                    <th className="px-6 py-3 text-left">Video Resources</th>
-                    <th className="px-6 py-3 text-left">Reading Resources</th>
-                  </tr>
-                </thead>
-                <tbody>
+            <div className="rounded-lg overflow-hidden">
+              <Table>
+                <TableHeader className="bg-spotify-hover">
+                  <TableRow>
+                    <TableHead className="text-white">Micro Topics</TableHead>
+                    <TableHead className="text-white">Video Resources</TableHead>
+                    <TableHead className="text-white">Reading Resources</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {mockReport.rootCauseDetection.map((item, index) => (
-                    <tr key={index} className={index > 0 ? "border-t border-spotify-hover" : ""}>
-                      <td className="px-6 py-4">
+                    <TableRow key={index} className={index > 0 ? "border-t border-spotify-hover" : ""}>
+                      <TableCell>
                         <a 
                           href={`/topic-reading/${item.microTopic.toLowerCase().replace(/\s+/g, '-')}`}
                           target="_blank"
@@ -184,8 +215,8 @@ const MixPracticeReport = () => {
                         >
                           {item.microTopic}
                         </a>
-                      </td>
-                      <td className="px-6 py-4">
+                      </TableCell>
+                      <TableCell>
                         <div className="space-y-2">
                           {item.videoResources.map((resource, i) => (
                             <a 
@@ -200,8 +231,8 @@ const MixPracticeReport = () => {
                             </a>
                           ))}
                         </div>
-                      </td>
-                      <td className="px-6 py-4">
+                      </TableCell>
+                      <TableCell>
                         <div className="space-y-2">
                           {item.readingResources.map((resource, i) => (
                             <a 
@@ -216,12 +247,36 @@ const MixPracticeReport = () => {
                             </a>
                           ))}
                         </div>
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
+          </motion.div>
+          
+          {/* Action buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex justify-center mt-6 gap-4"
+          >
+            {!isFinalReport && backPath === 'practice' ? (
+              <Button 
+                onClick={handleContinuePractice}
+                className="bg-[#9747FF] hover:bg-[#8035E8] px-8 py-3 text-lg"
+              >
+                Continue to Next Round
+              </Button>
+            ) : (
+              <Button 
+                onClick={handleBackToDashboard}
+                className="bg-[#9747FF] hover:bg-[#8035E8] px-8 py-3 text-lg"
+              >
+                Back to Dashboard
+              </Button>
+            )}
           </motion.div>
         </div>
       </div>

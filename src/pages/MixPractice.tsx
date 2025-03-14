@@ -13,18 +13,39 @@ const mockTopics: Topic[] = [
   { id: 3, name: 'Statistics', subject: 'Mathematics', exam: 'GMAT' },
 ];
 
-const mockMixes: Mix[] = [
-  { id: 1, title: 'Statistics Mix', topics: ['Median', 'Standard Deviation', 'Average'], subject: 'Mathematics' },
-  { id: 2, title: 'Linear relationship Word problems mix', topics: ['Linear equations', 'Word Problems', 'Slopes'], subject: 'Mathematics' },
-  { id: 3, title: 'Quadratic functions mix', topics: ['Quadratic equations', 'Graphs', 'Vertex'], subject: 'Mathematics' },
-];
+// Initialize global mixes data if not already set
+if (!window.mixesData) {
+  window.mixesData = [
+    {
+      id: 1,
+      title: "Statistics Mix",
+      topics: ["Median", "Standard Deviation", "Average"],
+      subject: "Mathematics",
+      isCustom: false
+    },
+    {
+      id: 2,
+      title: "Linear relationship Word problems mix",
+      topics: ["Linear equations", "Word Problems", "Slopes"],
+      subject: "Mathematics",
+      isCustom: false
+    },
+    {
+      id: 3,
+      title: "Quadratic functions mix",
+      topics: ["Quadratic equations", "Graphs", "Vertex"],
+      subject: "Mathematics",
+      isCustom: false
+    }
+  ];
+}
 
 const MixPractice = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   
-  // Get the selected mix based on the ID
-  const selectedMix = mockMixes.find(mix => mix.id === parseInt(id || '1'));
+  // Get the selected mix based on the ID from the global storage
+  const selectedMix = window.mixesData.find(mix => mix.id === parseInt(id || '1'));
   
   if (!selectedMix) {
     return <div className="text-center py-10">Mix not found</div>;

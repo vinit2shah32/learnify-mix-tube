@@ -27,6 +27,7 @@ export interface Question {
 
 export interface QuestionInterfaceProps {
   question: Question;
+  onQuestionAnswered?: (isCorrect: boolean) => void;
 }
 
 // New interfaces for Mixes feature

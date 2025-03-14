@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Check, ArrowLeft } from 'lucide-react';
-import { Topic } from '@/components/question/types';
+import { Topic, Mix } from '@/components/question/types';
 import { toast } from '@/hooks/use-toast';
 
 // Mock data - replace with actual data from your backend
@@ -21,6 +21,34 @@ const mockTopics: Topic[] = [
   { id: 8, name: 'Critical Reasoning', subject: 'Verbal', exam: 'GMAT' },
   { id: 9, name: 'Sentence Correction', subject: 'Verbal', exam: 'GMAT' },
 ];
+
+// In a real application, this would be handled through a context or global state management
+// For demo purposes, we'll use a global variable that's accessible across components
+if (!window.mixesData) {
+  window.mixesData = [
+    {
+      id: 1,
+      title: "Statistics Mix",
+      topics: ["Median", "Standard Deviation", "Average"],
+      subject: "Mathematics",
+      isCustom: false
+    },
+    {
+      id: 2,
+      title: "Linear relationship Word problems mix",
+      topics: ["Linear equations", "Word Problems", "Slopes"],
+      subject: "Mathematics",
+      isCustom: false
+    },
+    {
+      id: 3,
+      title: "Quadratic functions mix",
+      topics: ["Quadratic equations", "Graphs", "Vertex"],
+      subject: "Mathematics",
+      isCustom: false
+    }
+  ];
+}
 
 const CreateMix = () => {
   const navigate = useNavigate();
@@ -71,14 +99,28 @@ const CreateMix = () => {
     // Create a title for the mix
     const mixTitle = topicNames.join(' & ');
     
-    // Here you would normally save this to your backend
+    // Generate a new ID for the mix
+    const newId = Math.max(...window.mixesData.map(mix => mix.id)) + 1;
+    
+    // Create the new mix
+    const newMix = {
+      id: newId,
+      title: mixTitle,
+      topics: topicNames,
+      subject: selectedSubject,
+      isCustom: true
+    };
+    
+    // Add the new mix to the global mixes data
+    window.mixesData.push(newMix);
+    
     toast({
       title: "Mix Created!",
       description: `Your mix "${mixTitle}" has been created successfully.`,
     });
     
-    // Navigate back to dashboard
-    navigate('/');
+    // Navigate to the new mix's practice page
+    navigate(`/mix-practice/${newId}`);
   };
   
   return (

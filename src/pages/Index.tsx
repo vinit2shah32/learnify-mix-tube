@@ -1,10 +1,11 @@
 
-import { Book, BookOpen, Calculator, Library, PlayCircle, Video, ChevronRight, Edit, Compass, Brain, Plus } from "lucide-react";
+import { Book, BookOpen, Calculator, PlayCircle, Video, Edit, Compass, Brain, Plus } from "lucide-react";
 import { LearningCard } from "@/components/LearningCard";
 import { Section } from "@/components/Section";
 import { motion } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
 import { useState, useEffect } from "react";
+import { Mix } from "@/components/question/types";
 
 interface CourseProgressProps {
   title: string;
@@ -30,28 +31,52 @@ const CourseProgress = ({ title, subtitle, progress, imageSrc }: CourseProgressP
   );
 };
 
-const Index = () => {
-  // Mock mixes data - would normally come from API
-  const [mixes, setMixes] = useState([
+// Initialize global mixes data if not already set
+if (!window.mixesData) {
+  window.mixesData = [
     {
       id: 1,
       title: "Statistics Mix",
       topics: ["Median", "Standard Deviation", "Average"],
+      subject: "Mathematics",
       isCustom: false
     },
     {
       id: 2,
       title: "Linear relationship Word problems mix",
       topics: ["Linear equations", "Word Problems", "Slopes"],
+      subject: "Mathematics",
       isCustom: false
     },
     {
       id: 3,
       title: "Quadratic functions mix",
       topics: ["Quadratic equations", "Graphs", "Vertex"],
+      subject: "Mathematics",
       isCustom: false
     }
-  ]);
+  ];
+}
+
+const Index = () => {
+  // Get mixes from global storage
+  const [mixes, setMixes] = useState<Mix[]>([]);
+  
+  useEffect(() => {
+    // Load mixes from global store
+    setMixes(window.mixesData || []);
+    
+    // Listen for changes in the global mixes data
+    const handleMixesUpdate = () => {
+      setMixes([...window.mixesData]);
+    };
+    
+    window.addEventListener('mixesUpdated', handleMixesUpdate);
+    
+    return () => {
+      window.removeEventListener('mixesUpdated', handleMixesUpdate);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-spotify-dark text-white">
@@ -124,7 +149,9 @@ const Index = () => {
               subtitle={mix.topics.join(" • ")}
               icon={<Calculator className="w-6 h-6 text-spotify-accent" />}
               href={`/mix-practice/${mix.id}`}
-              imageSrc="https://images.unsplash.com/photo-1460574283810-2aab119d8511?auto=format&fit=crop&w=500"
+              imageSrc={mix.isCustom 
+                ? "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=500" 
+                : "https://images.unsplash.com/photo-1460574283810-2aab119d8511?auto=format&fit=crop&w=500"}
             />
           ))}
           <LearningCard

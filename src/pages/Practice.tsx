@@ -83,6 +83,7 @@ const Practice = () => {
   const [topicQAS, setTopicQAS] = useState<Record<string, number>>({});
   const [roundComplete, setRoundComplete] = useState(false);
   const [practiceComplete, setPracticeComplete] = useState(false);
+  const [questionResults, setQuestionResults] = useState<Record<number, 'Right' | 'Wrong' | 'Unattempted'>>({});
   
   const selectedMix = mockMixes.find(mix => mix.id === parseInt(id || '1'));
   
@@ -131,6 +132,12 @@ const Practice = () => {
     // Mark question as answered
     setAnsweredQuestions([...answeredQuestions, currentQuestion.id]);
     
+    // Track question result
+    setQuestionResults(prev => ({
+      ...prev,
+      [currentQuestion.id]: isCorrect ? 'Right' : 'Wrong'
+    }));
+    
     // Update QAS score if answered correctly
     if (isCorrect) {
       const currentTopic = selectedMix.topics[topicIndex];
@@ -165,19 +172,12 @@ const Practice = () => {
       return;
     }
     
-    // Start next round
-    setCurrentRound(currentRound + 1);
-    setRoundComplete(false);
-    setTopicIndex(0);
-    setQuestionIndex(0);
-    
-    // Load first question of next round
-    const nextTopicIndex = selectedMix?.topics.findIndex(topic => remainingTopics.includes(topic)) || 0;
-    loadQuestion(nextTopicIndex, 0);
+    // Navigate to report page after each round
+    navigate(`/mix-practice-report/${id}?round=${currentRound}&back=practice`);
   };
   
   const finishPractice = () => {
-    navigate(`/mix-practice-report/${id}`);
+    navigate(`/mix-practice-report/${id}?round=final`);
   };
   
   // Show fortune cookie at completion
@@ -251,12 +251,12 @@ const Practice = () => {
               </>
             ) : (
               <>
-                <p className="mb-6">Ready for the next round?</p>
+                <p className="mb-6">Ready to see how you did?</p>
                 <Button 
                   onClick={startNextRound}
                   className="bg-[#9747FF] hover:bg-[#8035E8] px-8 py-3 text-lg"
                 >
-                  Start Round {currentRound + 1}
+                  View Round Report
                 </Button>
               </>
             )}
@@ -270,7 +270,7 @@ const Practice = () => {
             </div>
             <QuestionInterface 
               question={currentQuestion}
-              // This would need to be extended to support tracking answers
+              onQuestionAnswered={handleQuestionAnswered}
             />
           </div>
         )}

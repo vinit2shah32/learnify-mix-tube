@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import { InputAnswer } from './InputAnswer';
 import { FeedbackMessage } from './FeedbackMessage';
 import { SolutionGuide } from './SolutionGuide';
 
-export const QuestionInterface = ({ question }: QuestionInterfaceProps) => {
+export const QuestionInterface = ({ question, onQuestionAnswered }: QuestionInterfaceProps) => {
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
   const [inputAnswer, setInputAnswer] = useState('');
   const [showSolution, setShowSolution] = useState(false);
@@ -57,6 +58,11 @@ export const QuestionInterface = ({ question }: QuestionInterfaceProps) => {
   };
 
   const handleNextQuestion = () => {
+    // Notify parent component about the question result
+    if (onQuestionAnswered) {
+      onQuestionAnswered(isCorrect);
+    }
+    
     setSelectedAnswers([]);
     setInputAnswer('');
     setIsSubmitted(false);
