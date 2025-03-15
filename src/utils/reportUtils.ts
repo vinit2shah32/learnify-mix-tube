@@ -1,5 +1,5 @@
 
-import { TopicPerformance, RootCauseItem, Mix } from '@/components/question/types';
+import { TopicPerformance, RootCauseItem } from '@/components/question/types';
 
 // Generate mock report data based on incorrect answers
 export const getMockReport = (mixId: string) => {
