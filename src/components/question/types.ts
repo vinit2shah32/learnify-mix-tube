@@ -1,3 +1,4 @@
+
 export interface MicroQuestion {
   id: number;
   question: string;
@@ -45,24 +46,33 @@ export interface Mix {
   isCustom?: boolean;
 }
 
-// New interfaces for exam selector feature
+// Updated interfaces for exam selector feature
 export interface Exam {
   id: number;
   name: string;
+  description?: string; // Added for potential database schema
   subjects: Subject[];
+  created_at?: string; // Added for potential database schema
+  updated_at?: string; // Added for potential database schema
 }
 
 export interface Subject {
   id: number;
   name: string;
+  description?: string; // Added for potential database schema
   exam_id: number;
   topics: ExamTopic[];
+  created_at?: string; // Added for potential database schema
+  updated_at?: string; // Added for potential database schema
 }
 
 export interface ExamTopic {
   id: number;
   name: string;
+  description?: string; // Added for potential database schema
   subject_id: number;
+  created_at?: string; // Added for potential database schema
+  updated_at?: string; // Added for potential database schema
 }
 
 export interface TopicPerformance {

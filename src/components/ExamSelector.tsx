@@ -8,59 +8,8 @@ import {
   SelectValue 
 } from '@/components/ui/select';
 import { Exam } from '@/components/question/types';
-
-// Mock data for exams until we integrate with a real database
-const mockExams: Exam[] = [
-  {
-    id: 1,
-    name: 'SAT',
-    subjects: [
-      {
-        id: 1,
-        name: 'Mathematics',
-        exam_id: 1,
-        topics: [
-          { id: 1, name: 'Algebra', subject_id: 1 },
-          { id: 2, name: 'Geometry', subject_id: 1 },
-          { id: 3, name: 'Statistics', subject_id: 1 }
-        ]
-      },
-      {
-        id: 2,
-        name: 'English',
-        exam_id: 1,
-        topics: [
-          { id: 4, name: 'Reading', subject_id: 2 },
-          { id: 5, name: 'Writing', subject_id: 2 }
-        ]
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: 'GMAT',
-    subjects: [
-      {
-        id: 3,
-        name: 'Quantitative',
-        exam_id: 2,
-        topics: [
-          { id: 6, name: 'Problem Solving', subject_id: 3 },
-          { id: 7, name: 'Data Sufficiency', subject_id: 3 }
-        ]
-      },
-      {
-        id: 4,
-        name: 'Verbal',
-        exam_id: 2,
-        topics: [
-          { id: 8, name: 'Reading Comprehension', subject_id: 4 },
-          { id: 9, name: 'Critical Reasoning', subject_id: 4 }
-        ]
-      }
-    ]
-  }
-];
+import { fetchExams } from '@/services/supabaseService';
+import { useToast } from '@/hooks/use-toast';
 
 interface ExamSelectorProps {
   className?: string;
@@ -69,23 +18,39 @@ interface ExamSelectorProps {
 export const ExamSelector = ({ className }: ExamSelectorProps) => {
   const [exams, setExams] = useState<Exam[]>([]);
   const [selectedExam, setSelectedExam] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const { toast } = useToast();
 
   useEffect(() => {
-    // In a real implementation, this would fetch from your database
-    setExams(mockExams);
+    const getExams = async () => {
+      try {
+        setLoading(true);
+        const fetchedExams = await fetchExams();
+        setExams(fetchedExams);
+        
+        // Set default selection if exams exist
+        if (fetchedExams.length > 0) {
+          setSelectedExam(fetchedExams[0].id.toString());
+        }
+      } catch (error) {
+        console.error('Failed to fetch exams:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load exams. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
     
-    // Set a default selection
-    if (mockExams.length > 0) {
-      setSelectedExam(mockExams[0].id.toString());
-    }
-  }, []);
+    getExams();
+  }, [toast]);
 
   const handleExamChange = (value: string) => {
     setSelectedExam(value);
-    // In a real implementation, this would trigger other data updates
-    console.log(`Selected exam: ${value}`);
     
-    // We could dispatch an event or call a callback function here
+    // Dispatch event for other components that need to know about the exam change
     const event = new CustomEvent('examSelected', { 
       detail: { examId: parseInt(value) } 
     });
@@ -94,9 +59,17 @@ export const ExamSelector = ({ className }: ExamSelectorProps) => {
 
   return (
     <div className={className}>
-      <Select value={selectedExam} onValueChange={handleExamChange}>
+      <Select 
+        value={selectedExam} 
+        onValueChange={handleExamChange}
+        disabled={loading}
+      >
         <SelectTrigger className="w-[180px] bg-spotify-card text-white border-spotify-hover">
-          <SelectValue placeholder="Select an exam" />
+          {loading ? (
+            <span className="text-spotify-text">Loading...</span>
+          ) : (
+            <SelectValue placeholder="Select an exam" />
+          )}
         </SelectTrigger>
         <SelectContent className="bg-spotify-card text-white border-spotify-hover">
           {exams.map((exam) => (
