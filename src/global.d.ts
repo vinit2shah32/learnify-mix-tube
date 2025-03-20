@@ -1,12 +1,8 @@
 
-interface Mix {
-  id: number;
-  title: string;
-  topics: string[];
-  subject: string;
-  isCustom: boolean;
-}
+import { Mix } from './components/question/types';
 
-interface Window {
-  mixesData: Mix[];
+declare global {
+  interface Window {
+    mixesData: Mix[];
+  }
 }

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Select, 
   SelectContent, 
@@ -8,20 +8,44 @@ import {
   SelectValue 
 } from '@/components/ui/select';
 import { Exam } from '@/components/question/types';
+import { fetchExams } from '@/services/supabaseService';
+import { useToast } from '@/hooks/use-toast';
 
 interface ExamSelectorProps {
   className?: string;
 }
 
 export const ExamSelector = ({ className }: ExamSelectorProps) => {
-  const [selectedExam, setSelectedExam] = useState<string>('1');
-  
-  // Mock exams data since we can't connect to Supabase right now
-  const mockExams: Exam[] = [
-    { id: 1, name: 'SAT', description: 'Scholastic Assessment Test' },
-    { id: 2, name: 'ACT', description: 'American College Testing' },
-    { id: 3, name: 'GMAT', description: 'Graduate Management Admission Test' }
-  ];
+  const [exams, setExams] = useState<Exam[]>([]);
+  const [selectedExam, setSelectedExam] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const getExams = async () => {
+      try {
+        setLoading(true);
+        const fetchedExams = await fetchExams();
+        setExams(fetchedExams);
+        
+        // Set default selection if exams exist
+        if (fetchedExams.length > 0) {
+          setSelectedExam(fetchedExams[0].id.toString());
+        }
+      } catch (error) {
+        console.error('Failed to fetch exams:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load exams. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    getExams();
+  }, [toast]);
 
   const handleExamChange = (value: string) => {
     setSelectedExam(value);
@@ -38,12 +62,17 @@ export const ExamSelector = ({ className }: ExamSelectorProps) => {
       <Select 
         value={selectedExam} 
         onValueChange={handleExamChange}
+        disabled={loading}
       >
         <SelectTrigger className="w-[180px] bg-spotify-card text-white border-spotify-hover">
-          <SelectValue placeholder="Select an exam" />
+          {loading ? (
+            <span className="text-spotify-text">Loading...</span>
+          ) : (
+            <SelectValue placeholder="Select an exam" />
+          )}
         </SelectTrigger>
         <SelectContent className="bg-spotify-card text-white border-spotify-hover">
-          {mockExams.map((exam) => (
+          {exams.map((exam) => (
             <SelectItem 
               key={exam.id} 
               value={exam.id.toString()}
