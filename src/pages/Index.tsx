@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Progress } from "@/components/ui/progress";
 import { useState, useEffect } from "react";
 import { Mix } from "@/components/question/types";
+import { ExamSelector } from "@/components/ExamSelector";
 
 interface CourseProgressProps {
   title: string;
@@ -95,6 +96,7 @@ const Index = () => {
             <h1 className="text-4xl font-bold">Welcome back to your learning journey</h1>
             <p className="text-spotify-text mt-2">Resume your topics</p>
           </div>
+          <ExamSelector className="ml-auto" />
         </motion.div>
 
         <div className="grid gap-4 mb-8">
@@ -232,3 +234,4 @@ const Index = () => {
 };
 
 export default Index;
+

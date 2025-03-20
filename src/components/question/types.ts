@@ -1,4 +1,3 @@
-
 export interface MicroQuestion {
   id: number;
   question: string;
@@ -44,6 +43,26 @@ export interface Mix {
   topics: string[];
   subject?: string;
   isCustom?: boolean;
+}
+
+// New interfaces for exam selector feature
+export interface Exam {
+  id: number;
+  name: string;
+  subjects: Subject[];
+}
+
+export interface Subject {
+  id: number;
+  name: string;
+  exam_id: number;
+  topics: ExamTopic[];
+}
+
+export interface ExamTopic {
+  id: number;
+  name: string;
+  subject_id: number;
 }
 
 export interface TopicPerformance {

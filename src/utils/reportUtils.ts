@@ -17,12 +17,12 @@ export const getMockReport = (mixId: string) => {
         { 
           id: Math.floor(Math.random() * 1000), 
           question: `${topic} question 1: What is the primary concept in ${topic}?`, 
-          status: Math.random() > 0.5 ? 'Right' : 'Wrong' as const 
+          status: Math.random() > 0.5 ? 'Right' : 'Wrong' as 'Right' | 'Wrong' | 'Unattempted'
         },
         { 
           id: Math.floor(Math.random() * 1000), 
           question: `${topic} question 2: How do you apply ${topic} in this scenario?`, 
-          status: Math.random() > 0.5 ? 'Right' : 'Wrong' as const 
+          status: Math.random() > 0.5 ? 'Right' : 'Wrong' as 'Right' | 'Wrong' | 'Unattempted'
         }
       ],
       qas: Math.floor(Math.random() * 40) + 60 // Random QAS between 60-100
