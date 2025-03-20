@@ -8,7 +8,7 @@ import { VideoMixList } from "@/components/home/VideoMixList";
 import { InDepthTopicsList } from "@/components/home/InDepthTopicsList";
 
 // Initialize global mixes data if not already set
-if (!window.mixesData) {
+if (typeof window !== "undefined" && !window.mixesData) {
   window.mixesData = [
     {
       id: 1,
