@@ -35,6 +35,8 @@ if (typeof window !== "undefined" && !window.mixesData) {
 }
 
 const Index = () => {
+  console.log("Rendering Index component");
+  
   return (
     <div className="min-h-screen bg-spotify-dark text-white">
       <div className="container py-8">

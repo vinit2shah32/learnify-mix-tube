@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -49,6 +50,13 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Spotify theme colors */
+    --spotify-dark: 0 0% 11%;
+    --spotify-card: 0 0% 18%;
+    --spotify-hover: 0 0% 22%;
+    --spotify-accent: 160 100% 45%;
+    --spotify-text: 0 0% 80%;
   }
 
   .dark {
@@ -87,6 +95,13 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Spotify theme colors remain the same in dark mode */
+    --spotify-dark: 0 0% 11%;
+    --spotify-card: 0 0% 18%;
+    --spotify-hover: 0 0% 22%;
+    --spotify-accent: 160 100% 45%;
+    --spotify-text: 0 0% 80%;
   }
 }
 
@@ -98,4 +113,29 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Add missing Spotify-themed background colors */
+.bg-spotify-dark {
+  background-color: hsl(var(--spotify-dark));
+}
+
+.bg-spotify-card {
+  background-color: hsl(var(--spotify-card));
+}
+
+.bg-spotify-hover {
+  background-color: hsl(var(--spotify-hover));
+}
+
+.text-spotify-accent {
+  color: hsl(var(--spotify-accent));
+}
+
+.text-spotify-text {
+  color: hsl(var(--spotify-text));
+}
+
+.border-spotify-hover {
+  border-color: hsl(var(--spotify-hover));
 }
