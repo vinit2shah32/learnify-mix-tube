@@ -1,3 +1,4 @@
+
 import { Book, BookOpen, Calculator, PlayCircle, Video, Edit, Compass, Brain, Plus } from "lucide-react";
 import { LearningCard } from "@/components/LearningCard";
 import { Section } from "@/components/Section";
@@ -31,45 +32,46 @@ const CourseProgress = ({ title, subtitle, progress, imageSrc }: CourseProgressP
   );
 };
 
-// Initialize global mixes data if not already set
-if (!window.mixesData) {
-  window.mixesData = [
-    {
-      id: 1,
-      title: "Statistics Mix",
-      topics: ["Median", "Standard Deviation", "Average"],
-      subject: "Mathematics",
-      isCustom: false
-    },
-    {
-      id: 2,
-      title: "Linear relationship Word problems mix",
-      topics: ["Linear equations", "Word Problems", "Slopes"],
-      subject: "Mathematics",
-      isCustom: false
-    },
-    {
-      id: 3,
-      title: "Quadratic functions mix",
-      topics: ["Quadratic equations", "Graphs", "Vertex"],
-      subject: "Mathematics",
-      isCustom: false
-    }
-  ];
-}
+// Default mixes data if not available in window
+const defaultMixes: Mix[] = [
+  {
+    id: 1,
+    title: "Statistics Mix",
+    topics: ["Median", "Standard Deviation", "Average"],
+    subject: "Mathematics",
+    isCustom: false
+  },
+  {
+    id: 2,
+    title: "Linear relationship Word problems mix",
+    topics: ["Linear equations", "Word Problems", "Slopes"],
+    subject: "Mathematics",
+    isCustom: false
+  },
+  {
+    id: 3,
+    title: "Quadratic functions mix",
+    topics: ["Quadratic equations", "Graphs", "Vertex"],
+    subject: "Mathematics",
+    isCustom: false
+  }
+];
 
 const Index = () => {
-  // Get mixes from global storage
-  const [mixes, setMixes] = useState<Mix[]>([]);
+  // Initialize mixes with default data
+  const [mixes, setMixes] = useState<Mix[]>(defaultMixes);
   
   useEffect(() => {
-    // Force refresh the mixes from global store
-    setMixes([...window.mixesData]);
+    // If window.mixesData is defined, use it
+    if (typeof window !== 'undefined' && window.mixesData) {
+      setMixes(window.mixesData);
+    }
     
     // Listen for changes in the global mixes data
     const handleMixesUpdate = () => {
-      console.log('Mixes updated event received');
-      setMixes([...window.mixesData]);
+      if (typeof window !== 'undefined' && window.mixesData) {
+        setMixes([...window.mixesData]);
+      }
     };
     
     window.addEventListener('mixesUpdated', handleMixesUpdate);
@@ -78,10 +80,6 @@ const Index = () => {
       window.removeEventListener('mixesUpdated', handleMixesUpdate);
     };
   }, []);
-  
-  useEffect(() => {
-    console.log('Current mixes in state:', mixes);
-  }, [mixes]);
 
   return (
     <div className="min-h-screen bg-spotify-dark text-white">
@@ -99,6 +97,7 @@ const Index = () => {
           <ExamSelector className="ml-auto" />
         </motion.div>
 
+        {/* Course Progress Section */}
         <div className="grid gap-4 mb-8">
           <CourseProgress
             title="Understanding laws of Physics"
@@ -120,6 +119,7 @@ const Index = () => {
           />
         </div>
 
+        {/* Practice Questions Section */}
         <Section title="Practice Questions" className="mb-8">
           <LearningCard
             title="Calculus Fundamentals"
@@ -147,6 +147,7 @@ const Index = () => {
           />
         </Section>
 
+        {/* Mixes Section */}
         <Section title="Mixes for you" className="mb-8">
           {mixes.map((mix) => (
             <LearningCard
@@ -169,6 +170,7 @@ const Index = () => {
           />
         </Section>
 
+        {/* Video Mix Section */}
         <Section title="Video mix for you">
           <LearningCard
             title="The realm of mathematics"
@@ -193,6 +195,7 @@ const Index = () => {
           />
         </Section>
 
+        {/* In-depth Topics Section */}
         <Section title="In-depth topics">
           <LearningCard
             title="Differential calculus"
@@ -234,4 +237,3 @@ const Index = () => {
 };
 
 export default Index;
-
