@@ -1,5 +1,5 @@
 
-import { Book, BookOpen, Calculator, PlayCircle, Video, Edit, Compass, Brain, Plus } from "lucide-react";
+import { Book, BookOpen, Calculator, PlayCircle, Video, Edit, Compass, Brain, Plus, Music, Headphones, DiscAlbum } from "lucide-react";
 import { LearningCard } from "@/components/LearningCard";
 import { Section } from "@/components/Section";
 import { motion } from "framer-motion";
@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { useState, useEffect } from "react";
 import { Mix } from "@/components/question/types";
 import { ExamSelector } from "@/components/ExamSelector";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface CourseProgressProps {
   title: string;
@@ -19,15 +20,15 @@ const CourseProgress = ({ title, subtitle, progress, imageSrc }: CourseProgressP
   return (
     <motion.div
       className="flex items-center gap-4 p-4 rounded-lg bg-spotify-card hover:bg-spotify-hover transition-colors"
-      whileHover={{ scale: 1.02 }}
+      whileHover={{ scale: 1.01 }}
     >
-      <img src={imageSrc} alt="" className="w-12 h-12 rounded-lg object-cover" />
+      <img src={imageSrc} alt="" className="w-16 h-16 rounded-lg object-cover" />
       <div className="flex-1">
         <h3 className="text-white font-medium">{title}</h3>
         <p className="text-sm text-spotify-text">{subtitle}</p>
-        <Progress value={progress} className="mt-2" />
+        <Progress value={progress} className="mt-2 bg-spotify-dark h-1" indicatorClassName="bg-spotify-accent" />
       </div>
-      <span className="text-sm text-spotify-text">{progress}% complete</span>
+      <span className="text-sm text-spotify-text font-medium">{progress}%</span>
     </motion.div>
   );
 };
@@ -82,23 +83,23 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-spotify-dark text-white">
-      <div className="container py-8">
+    <div className="min-h-screen bg-spotify-dark text-white pb-12">
+      <div className="container py-8 max-w-7xl mx-auto px-4">
         <motion.div 
-          className="flex items-center justify-between mb-8"
+          className="flex items-center justify-between mb-10"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           <div>
-            <h1 className="text-4xl font-bold">Welcome back to your learning journey</h1>
-            <p className="text-spotify-text mt-2">Resume your topics</p>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-spotify-text bg-clip-text text-transparent">Welcome back to your learning journey</h1>
+            <p className="text-spotify-text mt-2 text-lg">Pick up where you left off</p>
           </div>
           <ExamSelector className="ml-auto" />
         </motion.div>
 
         {/* Course Progress Section */}
-        <div className="grid gap-4 mb-8">
+        <div className="grid gap-4 mb-12">
           <CourseProgress
             title="Understanding laws of Physics"
             subtitle="Thermodynamics • Motion • Vector"
@@ -120,7 +121,7 @@ const Index = () => {
         </div>
 
         {/* Practice Questions Section */}
-        <Section title="Practice Questions" className="mb-8">
+        <Section title="Practice Questions" className="mb-12" useCarousel={true}>
           <LearningCard
             title="Calculus Fundamentals"
             subtitle="What is the derivative of x²?"
@@ -148,7 +149,7 @@ const Index = () => {
         </Section>
 
         {/* Mixes Section */}
-        <Section title="Mixes for you" className="mb-8">
+        <Section title="Mixes for you" className="mb-12" useCarousel={true}>
           {mixes.map((mix) => (
             <LearningCard
               key={mix.id}
@@ -171,25 +172,25 @@ const Index = () => {
         </Section>
 
         {/* Video Mix Section */}
-        <Section title="Video mix for you">
+        <Section title="Study playlists" className="mb-12" useCarousel={true}>
           <LearningCard
-            title="The realm of mathematics"
-            subtitle="Comprehensive guide to math concepts"
-            icon={<Video className="w-6 h-6 text-spotify-accent" />}
+            title="Mathematics Essentials"
+            subtitle="Focus mix for deep study"
+            icon={<DiscAlbum className="w-6 h-6 text-spotify-accent" />}
             href="/videos/math-realm"
             imageSrc="https://images.unsplash.com/photo-1497604401993-f2e922e5cb0a?auto=format&fit=crop&w=500"
           />
           <LearningCard
-            title="Diving deep into the world of probability"
-            subtitle="Probability concepts explained"
-            icon={<PlayCircle className="w-6 h-6 text-spotify-accent" />}
+            title="Deep Focus"
+            subtitle="Lo-fi beats for concentration"
+            icon={<Headphones className="w-6 h-6 text-spotify-accent" />}
             href="/videos/probability"
             imageSrc="https://images.unsplash.com/photo-1551038247-3d9af20df552?auto=format&fit=crop&w=500"
           />
           <LearningCard
-            title="Chemistry: Alkaline and Acidic solution study"
-            subtitle="Understanding pH and solutions"
-            icon={<Video className="w-6 h-6 text-spotify-accent" />}
+            title="Study Beats"
+            subtitle="Electronic focus music"
+            icon={<Music className="w-6 h-6 text-spotify-accent" />}
             href="/videos/chemistry"
             imageSrc="https://images.unsplash.com/photo-1493397212122-2b85dda8106b?auto=format&fit=crop&w=500"
           />

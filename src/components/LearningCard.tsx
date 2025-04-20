@@ -2,6 +2,7 @@
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { Play } from "lucide-react";
 
 interface LearningCardProps {
   title: string;
@@ -49,11 +50,17 @@ export const LearningCard = ({
         {imageSrc && (
           <div className="absolute inset-0 opacity-20">
             <img src={imageSrc} alt="" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-spotify-card to-transparent opacity-80"></div>
           </div>
         )}
         <div className="flex items-center justify-between relative z-10">
           <div className="rounded-full bg-spotify-dark p-3">
             {icon}
+          </div>
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="w-12 h-12 rounded-full bg-spotify-accent flex items-center justify-center shadow-lg hover:scale-110 transition-transform cursor-pointer">
+              <Play className="w-6 h-6 text-black ml-1" />
+            </div>
           </div>
         </div>
         <div className="mt-auto relative z-10">

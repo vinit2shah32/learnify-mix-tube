@@ -40,7 +40,7 @@ export const ExamSelector = ({ className }: ExamSelectorProps) => {
         value={selectedExam} 
         onValueChange={handleExamChange}
       >
-        <SelectTrigger className="w-[180px] bg-spotify-card text-white border-spotify-hover">
+        <SelectTrigger className="w-[180px] bg-spotify-card text-white border-spotify-hover focus:ring-spotify-accent focus:ring-offset-spotify-dark">
           <SelectValue placeholder="Select an exam" />
         </SelectTrigger>
         <SelectContent className="bg-spotify-card text-white border-spotify-hover">
@@ -48,7 +48,7 @@ export const ExamSelector = ({ className }: ExamSelectorProps) => {
             <SelectItem 
               key={exam.id} 
               value={exam.id.toString()}
-              className="focus:bg-spotify-hover focus:text-white"
+              className="focus:bg-spotify-hover focus:text-white data-[highlighted]:bg-spotify-hover data-[highlighted]:text-white"
             >
               {exam.name}
             </SelectItem>
